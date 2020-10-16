@@ -10,8 +10,9 @@ echo "Loaded all modules"
 echo "Executing python script"
 
 env
-cat timed_model.py
+cat 1024_512_sum_660.py
 
+echo "-------------------------------------------------------------------------------------------"
 export TIME_LAUNCH_MPI=`date +%s%N | cut -b1-13`
 mpirun -n ${NTASKS} bash -c "TIME_LAUNCH_PYTHON=\`date +%s%N | cut -b1-13\` python3 ${UW_SCRIPT}"
 

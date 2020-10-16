@@ -17,7 +17,7 @@ otol    = float(os.getenv("UW_SOL_TOLERANCE",1.e-6))
 penalty = float(os.getenv("UW_PENALTY",1e-3))
 do_IO   = bool(int(os.getenv("UW_ENABLE_IO","0")))
 jobid   = str(os.getenv("PBS_JOBID",os.getenv("SLURM_JOB_ID","0000000")))
-
+ncpus   = int(os.getenv("NTASKS",1))
 # In[ ]:
 
 uw.timing.start() #starts timing
@@ -197,9 +197,9 @@ uw.timing.start()
 # loading swarm and material variable
 swarm_mat_var_path  = '/home/565/tg7098/annulus_input/swarmMatVar/2891_660_annulus/'
 swarm 		    = uw.swarm.Swarm(mesh, particleEscape=True)
-swarm.load(swarm_mat_var_path+'swarm_'+str(res)+'.h5')
+swarm.load(swarm_mat_var_path+'swarm_'+str(res)+'_'+str(ncpus)+'.h5')
 materialVariable    = swarm.add_variable("int", 1)
-materialVariable.load(swarm_mat_var_path+'matVar_'+str(res)+'.h5')
+materialVariable.load(swarm_mat_var_path+'matVar_'+str(res)+'_'+str(ncpus)+'.h5')
 pol_con 	    = uw.swarm.PopulationControl(swarm, aggressive=True, particlesPerCell=20)
 # evalute using swarm variable is set to true
 swarm.allow_parallel_nn = True
