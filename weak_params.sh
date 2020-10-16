@@ -3,7 +3,7 @@ export JOBS="1 2 4 8"
 export UW_NAME="thyagi2d_test_take1"
 export UW_ENABLE_IO="0"
 
-export WALLTIME="00:01:00"
+export WALLTIME="01:00:00"
 export ACCOUNT="n69"
 
 export WEAK_SCALING_BASE=128
