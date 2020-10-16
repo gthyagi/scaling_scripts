@@ -17,7 +17,7 @@ otol    = float(os.getenv("UW_SOL_TOLERANCE",1.e-6))
 penalty = float(os.getenv("UW_PENALTY",1e-3))
 do_IO   = bool(int(os.getenv("UW_ENABLE_IO","0")))
 jobid   = str(os.getenv("PBS_JOBID",os.getenv("SLURM_JOB_ID","0000000")))
-ncpus   = int(os.getenv("NTASKS",1))
+ncpus   = int(os.getenv("PBSTASKS",1))
 # In[ ]:
 
 uw.timing.start() #starts timing
@@ -718,7 +718,7 @@ def checkpoint():
 
 time 		= 0.  # Initial time
 step 		= 0   # Initial timestep
-maxSteps 	= 2      # Maximum timesteps
+maxSteps 	= 1   # Maximum timesteps
 steps_output 	= 1   # output every 10 timesteps
 
 
