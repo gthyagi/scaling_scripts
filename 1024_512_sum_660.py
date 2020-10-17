@@ -183,12 +183,12 @@ right = mesh.specialSets["MinJ_VertexSet"]
 # In[ ]:
 
 
-# timing loading process
-if uw.mpi.rank == 0:
-    print ('---------------------------------')
-    print ("Started loading swarm and matVar")
-    print ('---------------------------------')
-uw.timing.start()
+# # timing loading process
+# if uw.mpi.rank == 0:
+#     print ('---------------------------------')
+#     print ("Started loading swarm and matVar")
+#     print ('---------------------------------')
+# uw.timing.start()
 
 
 # In[ ]:
@@ -208,13 +208,13 @@ swarm.allow_parallel_nn = True
 # In[ ]:
 
 
-uw.timing.stop()
-# printing stats of loading process
-if uw.mpi.rank == 0:
-    print ('---------------------------------')
-    print ("Finished loading swarm and matVar")
-    print ('---------------------------------')
-uw.timing.print_table()
+# uw.timing.stop()
+# # printing stats of loading process
+# if uw.mpi.rank == 0:
+#     print ('---------------------------------')
+#     print ("Finished loading swarm and matVar")
+#     print ('---------------------------------')
+# uw.timing.print_table()
 
 
 # In[ ]:
