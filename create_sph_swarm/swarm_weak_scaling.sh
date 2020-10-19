@@ -1,6 +1,6 @@
 #!/bin/bash
-source weak_params.sh
-export NAME="Results_Weak_${UW_NAME}_DIM_${UW_DIM}_BASE_${WEAK_SCALING_BASE}_ORDER_${UW_ORDER}_TOL_${UW_SOL_TOLERANCE}_PENALTY_${UW_PENALTY}_IO_${UW_ENABLE_IO}"
+source swarm_weak_params.sh
+export NAME="Results_weak_${UW_NAME}_DIM_${UW_DIM}_BASE_${WEAK_SCALING_BASE}_ORDER_${UW_ORDER}_TOL_${UW_SOL_TOLERANCE}_PENALTY_${UW_PENALTY}_IO_${UW_ENABLE_IO}"
 
 ## find the BATCH environment ##
 #################################
@@ -22,23 +22,27 @@ cp *.sh ${NAME}
 cp *.py ${NAME}
 cd ${NAME}
 
-for i in ${JOBS} 
+for ((i = 0; i < 4; i++)) 
 do
-   export UW_RESOLUTION="$((${WEAK_SCALING_BASE} * ${i}))"
-   export NTASKS="$((${i}**${UW_DIM}))"
-   export EXPORTVARS="UW_RESOLUTION,NTASKS,UW_ENABLE_IO,UW_ORDER,UW_DIM,UW_SOL_TOLERANCE,UW_PENALTY,UW_SCRIPT"
+   export UW_RES_RAD="${RES_RAD[i]}"
+   export UW_RES_LON="${RES_LON[i]}"
+   export UW_RES_LAT="${RES_LAT[i]}"
+   export NTASKS=""${JOB_NCPUS[i]}""
+
+   export EXPORTVARS="UW_RES_RAD,UW_RES_LON,UW_RES_LAT,NTASKS,UW_ENABLE_IO,UW_ORDER,UW_DIM,UW_SOL_TOLERANCE,UW_PENALTY,UW_SCRIPT"
    if [ $BATCH_SYS == "PBS" ] ; then
       export QUEUE="normal" # normal or express
-
-      # memory requirement guess: 3GB * nprocs
-      MEMORY="$((4*${NTASKS}))GB"
       if [ ${NTASKS} -le 48 ] ; then
          PBSTASKS=`python3<<<"print(${NTASKS})"`
-	 export NCPUS_TASK="${PBSTASKS}"
+	 export PBSTASKS
+         MEMORY="$((4*${PBSTASKS}))GB" # memory requirement guess: 4GB * nprocs
       else
-         PBSTASKS=`python3<<<"print((int(round(${NTASKS}/48)) + (${NTASKS} % 48 > 0))*48)"`  # round up to nearest 48 as required by nci
-	 export NCPUS_TASK="${PBSTASKS}"
+         PBSTASKS=`python3<<<"from math import floor; print((int(floor(${NTASKS}/48)) + (${NTASKS} % 48 > 0))*48)"`  # round up to nearest 48 as required by nci
+	 export PBSTASKS
+         MEMORY="$((1*${PBSTASKS}))GB" # memory requirement guess: 1GB * nprocs
       fi
+      echo "Python job cpus: "${NTASKS} "| PBS jobs cpus: "${PBSTASKS}
+      export EXPORTVARS="UW_RES_RAD,UW_RES_LON,UW_RES_LAT,NTASKS,UW_ENABLE_IO,UW_ORDER,UW_DIM,UW_SOL_TOLERANCE,UW_PENALTY,UW_SCRIPT,PBSTASKS"
       # -V to pass all env vars to PBS (raijin/nci) 
       CMD="qsub -v ${EXPORTVARS} -N ${NAME} -l ncpus=${PBSTASKS},mem=${MEMORY},walltime=${WALLTIME},wd -P ${ACCOUNT} -q ${QUEUE} gadi_baremetal_go.sh"
       echo ${CMD}

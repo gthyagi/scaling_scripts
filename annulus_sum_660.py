@@ -17,15 +17,16 @@ otol    = float(os.getenv("UW_SOL_TOLERANCE",1.e-6))
 penalty = float(os.getenv("UW_PENALTY",1e-3))
 do_IO   = bool(int(os.getenv("UW_ENABLE_IO","0")))
 jobid   = str(os.getenv("PBS_JOBID",os.getenv("SLURM_JOB_ID","0000000")))
-ncpus   = int(os.getenv("NCPUS_TASK",1))
+ncpus   = int(os.getenv("NTASKS",1))
+
 # In[ ]:
 
 uw.timing.start() #starts timing
 
 # model parameters
 res_angular 	= res_env*2
-res_radial	    = res_env
-dim  		    = 2
+res_radial	= res_env
+dim  		= 2
 inner_radius 	= 3480./6371.
 outer_radius 	= 6371./6371.
 
@@ -62,10 +63,10 @@ tao_Y_OC = 'const_coh'
 """
 solver: default (fgmres-mg), mg, mumps, slud (superludist), lu (only serial)
 """
-solver 		    = 'fgmres'
-inner_rtol 	    = itol   # def = 1e-5
-outer_rtol 	    = otol
-penalty_mg 	    = penalty
+solver 		= 'fgmres'
+inner_rtol 	= itol   # def = 1e-5
+outer_rtol 	= otol
+penalty_mg 	= penalty
 penalty_mumps 	= 1.0e6
 
 
@@ -74,11 +75,11 @@ penalty_mumps 	= 1.0e6
 
 # adding string to output directory
 if tao_Y_OC == 'const_coh':
-    file_str 	= str(res)+'_'+str(cohesion)+'_'+str(crust_depth)
+    file_str 	= str(res)+'_'+str(cohesion)+'_'+str(crust_depth)+'_'+str(ncpus)
 if tao_Y_OC == 'coh_mu_rho_g_z':
-    file_str 	= str(res)+'_'+str(cohesion)+'_'+str(mu)+'_'+str(crust_depth)
+    file_str 	= str(res)+'_'+str(cohesion)+'_'+str(mu)+'_'+str(crust_depth)+'_'+str(ncpus)
 if tao_Y_OC == 'coh_mu_eff_rho_g_z':
-    file_str 	= str(res)+'_'+str(cohesion)+'_'+str(mu)+'_'+str(crust_depth)
+    file_str 	= str(res)+'_'+str(cohesion)+'_'+str(mu)+'_'+str(crust_depth)+'_'+str(ncpus)
 
 
 # In[ ]:
@@ -183,12 +184,12 @@ right = mesh.specialSets["MinJ_VertexSet"]
 # In[ ]:
 
 
-# # timing loading process
-# if uw.mpi.rank == 0:
-#     print ('---------------------------------')
-#     print ("Started loading swarm and matVar")
-#     print ('---------------------------------')
-# uw.timing.start()
+# timing loading process
+#if uw.mpi.rank == 0:
+#    print ('---------------------------------')
+#    print ("Started loading swarm and matVar")
+#    print ('---------------------------------')
+#uw.timing.start()
 
 
 # In[ ]:
@@ -208,13 +209,13 @@ swarm.allow_parallel_nn = True
 # In[ ]:
 
 
-# uw.timing.stop()
-# # printing stats of loading process
-# if uw.mpi.rank == 0:
-#     print ('---------------------------------')
-#     print ("Finished loading swarm and matVar")
-#     print ('---------------------------------')
-# uw.timing.print_table()
+#uw.timing.stop()
+# printing stats of loading process
+#if uw.mpi.rank == 0:
+#    print ('---------------------------------')
+#    print ("Finished loading swarm and matVar")
+#    print ('---------------------------------')
+#uw.timing.print_table()
 
 
 # In[ ]:
