@@ -10,7 +10,7 @@ echo "Loaded all modules"
 echo "Executing python script"
 
 env
-cat ${UW_SCRIPT}
+cat create_swarm_sum.py
 
 echo "-------------------------------------------------------------------------------------------"
 export TIME_LAUNCH_MPI=`date +%s%N | cut -b1-13`
